@@ -10,12 +10,12 @@ namespace orion
     struct Vector3_t : public Vector<T, 3> {
         using Vector_t = Vector<T, 3>;
 
-        Vector3_t() noexcept = default;
-        explicit Vector3_t(T initializer) noexcept
+        constexpr Vector3_t() noexcept = default;
+        constexpr explicit Vector3_t(T initializer) noexcept
             : Vector_t{initializer, initializer, initializer}
         {
         }
-        Vector3_t(T x, T y, T z) noexcept
+        constexpr Vector3_t(T x, T y, T z) noexcept
             : Vector_t{x, y, z}
         {
         }
