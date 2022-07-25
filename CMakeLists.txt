@@ -20,7 +20,6 @@ target_include_directories(orion-math INTERFACE include/)
 
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
-message(${CMAKE_MODULE_PATH})
 include(EnableGoogleTest)
 EnableGoogleTest(ORION-MATH)
 
