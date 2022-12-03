@@ -1,3 +1,4 @@
 target_sources(orion_math_lib
         INTERFACE
-        abs.h)
+        abs.h
+        sqrt.h)
