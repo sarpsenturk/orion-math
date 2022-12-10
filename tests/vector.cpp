@@ -1,5 +1,7 @@
 #include "orion-math/vector/vector.h"
 
+#include "orion-math/vector/formatter.h"
+
 #include <gtest/gtest.h>
 #include <iterator> // std::distance, std::next
 
@@ -216,4 +218,12 @@ TEST(Vector, VectorCast)
     const auto vector_i = orion::math::vector_cast<int>(vector_f);
     const auto expected = orion::math::Vector{1, 2, 3};
     EXPECT_EQ(vector_i, expected);
+}
+
+TEST(Vector, Format)
+{
+    EXPECT_EQ(fmt::format("{}", orion::math::Vector{1, 2}), "Vector2(1, 2)");
+    EXPECT_EQ(fmt::format("{}", orion::math::Vector{1, 2, 3}), "Vector3(1, 2, 3)");
+    EXPECT_EQ(fmt::format("{}", orion::math::Vector{1, 2, 3, 4}), "Vector4(1, 2, 3, 4)");
+    EXPECT_EQ(fmt::format("{}", orion::math::Vector{1.5f, 2, 3, 4.1f}), "Vector4(1.5, 2, 3, 4.1)");
 }
