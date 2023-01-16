@@ -9,14 +9,7 @@ project(ORION_MATH_PROJECT
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
 # Dependencies
-include(FetchContent)
-FetchContent_Declare(
-        fmt
-        GIT_REPOSITORY https://github.com/fmtlib/fmt.git
-        GIT_TAG 9.1.0
-        FIND_PACKAGE_ARGS NAMES fmt
-)
-FetchContent_MakeAvailable(fmt)
+find_package(fmt REQUIRED)
 
 # Application library
 add_library(orion_math_lib INTERFACE "")
@@ -32,5 +25,6 @@ add_library(orion::math ALIAS orion_math_lib)
 option(ORION_MATH_BUILD_TESTS "Build tests for orion-math" OFF)
 if (ORION_MATH_BUILD_TESTS)
     enable_testing()
+    find_package(GTest REQUIRED)
     add_subdirectory(tests)
 endif()
