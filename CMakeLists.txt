@@ -53,8 +53,8 @@ endif ()
 if (ORION_MATH_INSTALL)
     include(CMakePackageConfigHelpers)
 
-    set(version_config ${PROJECT_BINARY_DIR}/OrionMathConfigVersion.cmake)
-    set(project_config ${PROJECT_BINARY_DIR}/OrionMathConfig.cmake)
+    set(version_config ${PROJECT_BINARY_DIR}/orion-math-config-version.cmake)
+    set(project_config ${PROJECT_BINARY_DIR}/orion-math-config.cmake)
     set(install_targets orion_math)
     set(target_exports orion-math-targets)
     set(cmake_dir ${CMAKE_INSTALL_LIBDIR}/cmake/orion-math)
@@ -76,7 +76,7 @@ if (ORION_MATH_INSTALL)
     )
 
     configure_package_config_file(
-            ${CMAKE_CURRENT_SOURCE_DIR}/cmake/OrionMathConfig.cmake.in
+            ${CMAKE_CURRENT_SOURCE_DIR}/cmake/orion-math-config.in
             ${project_config}
             INSTALL_DESTINATION ${cmake_dir}
     )
