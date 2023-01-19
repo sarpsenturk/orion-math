@@ -18,7 +18,7 @@ namespace orion::math
 
         auto result = value / 2;
         while (true) {
-            auto next = 0.5 * (result + value / result);
+            auto next = Floating{0.5} * (result + value / result);
             auto diff = abs(result - next);
             if (diff <= std::numeric_limits<Floating>::epsilon()) {
                 break;

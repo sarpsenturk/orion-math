@@ -24,7 +24,7 @@ TEST(Vector, At)
 TEST(Vector, AtOutOfRange)
 {
     const orion::math::Vector vector{1};
-    EXPECT_THROW(vector.at(1), std::out_of_range);
+    EXPECT_THROW((void)vector.at(1), std::out_of_range);
 }
 
 TEST(Vector, SubscriptOperator)
@@ -201,7 +201,7 @@ TEST(Vector, DotProduct)
     const auto lhs = orion::math::Vector{1, 2, 3};
     const auto rhs = orion::math::Vector{4, 5, 6};
     const auto expected = 32;
-    EXPECT_EQ(orion::math::dot(lhs, rhs), 32);
+    EXPECT_EQ(orion::math::dot(lhs, rhs), expected);
 }
 
 TEST(Vector, CrossProduct)
