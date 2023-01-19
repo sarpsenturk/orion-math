@@ -114,6 +114,7 @@
     },
     {
       "name": "windows-msvc-debug",
+      "displayName": "MSVC Debug",
       "description": "Windows platform with MSVC, debug build",
       "inherits": [
         "windows-base",

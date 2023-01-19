@@ -1,21 +1,13 @@
 cmake_minimum_required(VERSION 3.23)
 
-project(ORION_MATH_PROJECT
+project(OrionMath
         VERSION 0.1.0
         DESCRIPTION "Math library for the Orion game engine"
         LANGUAGES CXX)
 
-if (NOT DEFINED ORION_MATH_TOP_LEVEL)
-    set(ORION_MATH_TOP_LEVEL OFF)
-    if (CMAKE_CURRENT_SRC_DIR STREQUAL CMAKE_SOURCE_DIR)
-        set(ORION_MATH_TOP_LEVEL ON)
-    endif ()
-endif ()
-
-
 include(GNUInstallDirs)
 
-option(ORION_MATH_TEST "Generate test targets orion-math" ${ORION_MATH_TOP_LEVEL})
+option(ORION_MATH_TEST "Generate test targets orion-math" ${PROJECT_IS_TOP_LEVEL})
 option(ORION_MATH_INSTALL "Generate install target" ON)
 
 # Add our CMake modules
@@ -51,7 +43,7 @@ add_subdirectory(include/orion-math)
 add_library(orion::math ALIAS orion_math)
 
 # Enable/disable tests
-if (ORION_MATH_BUILD_TESTS)
+if (ORION_MATH_TEST)
     enable_testing()
     find_package(GTest REQUIRED)
     add_subdirectory(tests)
@@ -61,16 +53,22 @@ endif ()
 if (ORION_MATH_INSTALL)
     include(CMakePackageConfigHelpers)
 
+    set(version_config ${PROJECT_BINARY_DIR}/OrionMathConfigVersion.cmake)
+    set(project_config ${PROJECT_BINARY_DIR}/OrionMathConfig.cmake)
+    set(install_targets orion_math)
+    set(target_exports orion-math-targets)
+    set(cmake_dir ${CMAKE_INSTALL_LIBDIR}/cmake/orion-math)
+
     # Create version config file
     write_basic_package_version_file(
-            "${CMAKE_CURRENT_BINARY_DIR}/OrionMathConfigVersion.cmake"
+            ${version_config}
             VERSION ${PROJECT_VERSION}
             COMPATIBILITY SameMajorVersion
     )
 
     install(
-            TARGETS orion_math
-            EXPORT OrionMathTargets
+            TARGETS ${install_targets}
+            EXPORT ${target_exports}
             ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
             RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -79,13 +77,14 @@ if (ORION_MATH_INSTALL)
 
     configure_package_config_file(
             ${CMAKE_CURRENT_SOURCE_DIR}/cmake/OrionMathConfig.cmake.in
-            ${PROJECT_BINARY_DIR}/OrionMathConfig.cmake
-            INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/orion-math
+            ${project_config}
+            INSTALL_DESTINATION ${cmake_dir}
     )
 
-    install(EXPORT OrionMathTargets DESTINATION ${CMAKE_INSTALL_LIBDIR}/orion-math)
-    install(FILES
-            "${CMAKE_CURRENT_BINARY_DIR}/OrionMathConfig.cmake"
-            "${CMAKE_CURRENT_BINARY_DIR}/OrionMathConfigVersion.cmake"
-            DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/orion-math)
+    install(
+            EXPORT ${target_exports}
+            NAMESPACE orion::
+            DESTINATION ${cmake_dir})
+    install(FILES ${project_config} ${version_config}
+            DESTINATION ${cmake_dir})
 endif ()

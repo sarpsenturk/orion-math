@@ -7,7 +7,7 @@
 
 TEST(Vector, At)
 {
-    constexpr int expected = 42;
+    constexpr int expected = 421;
     orion::math::Vector<int, 3> vector{};
     ASSERT_NE(vector.at(0), expected);
     ASSERT_NE(vector.at(1), expected);
