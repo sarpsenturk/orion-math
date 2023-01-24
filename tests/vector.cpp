@@ -71,17 +71,17 @@ TEST(Vector, SqrMagnitude)
 TEST(Vector, Magnitude)
 {
     const auto vector = orion::math::Vector{1, 2, 3};
-    EXPECT_FLOAT_EQ(vector.magnitude(), 3.7416573867739413f);
+    EXPECT_NEAR(vector.magnitude(), 3.7416573867739413, 1e-8);
 }
 
 TEST(Vector, Normalized)
 {
     const auto vector = orion::math::Vector{1, 2, 3};
-    const auto expected = orion::math::Vector{0.2672612419124244f, 0.5345224838248488f, 0.8017837257372732f};
+    const auto expected = orion::math::Vector{0.2672612419124244, 0.5345224838248488, 0.8017837257372732};
     const auto normalized = vector.normalized();
-    EXPECT_FLOAT_EQ(normalized[0], expected[0]);
-    EXPECT_FLOAT_EQ(normalized[1], expected[1]);
-    EXPECT_FLOAT_EQ(normalized[2], expected[2]);
+    EXPECT_NEAR(normalized[0], expected[0], 1e-8);
+    EXPECT_NEAR(normalized[1], expected[1], 1e-8);
+    EXPECT_NEAR(normalized[2], expected[2], 1e-8);
 }
 
 TEST(Vector, Normalize)

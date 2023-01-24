@@ -5,6 +5,8 @@ target_sources(orion_math
         FILES
         abs.h
         sqrt.h
+        func.h
+        concepts.h
         )
 
 add_subdirectory(vector)

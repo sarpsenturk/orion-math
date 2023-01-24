@@ -1,6 +1,8 @@
 #pragma once
 
-#include "orion-math/sqrt.h" // orion::math::sqrt
+#include "orion-math/concepts.h" // arithmetic
+#include "orion-math/func.h"     // negate, plus, minus
+#include "orion-math/sqrt.h"     // orion::math::sqrt
 
 #include <algorithm>   // std::ranges::transform, std::ranges::for_each, std::accumulate
 #include <array>       // std::array
@@ -10,7 +12,7 @@
 #include <numeric>     // std::transform_reduce, std::inner_product
 #include <ranges>      // std::ranges::input_range, std::ranges::begin, std::ranges::end
 #include <stdexcept>   // std::out_of_range
-#include <type_traits> // std::is_arithmetic, std::common_type, std::is_same_v
+#include <type_traits> // std::common_type, std::is_same_v
 
 #define ORION_VECTOR_DEFINE_COMPONENT(name, index)                \
     [[nodiscard]] constexpr reference name() noexcept             \
@@ -26,9 +28,6 @@
 
 namespace orion::math
 {
-    template<typename T>
-    concept arithmetic = std::is_arithmetic_v<T>;
-
     template<arithmetic T, std::size_t N>
     struct Vector {
     public:
@@ -73,10 +72,9 @@ namespace orion::math
         ORION_VECTOR_DEFINE_COMPONENT(z, 2)
         ORION_VECTOR_DEFINE_COMPONENT(w, 3)
 
-        [[nodiscard]] constexpr float sqr_magnitude() const noexcept
+        [[nodiscard]] constexpr auto sqr_magnitude() const noexcept
         {
-            constexpr auto sqr_sum = [](auto sum, auto value) { return sum + value * value; };
-            return std::accumulate(begin(), end(), float{}, sqr_sum);
+            return std::inner_product(begin(), end(), begin(), value_type{});
         }
 
         [[nodiscard]] constexpr auto magnitude() const noexcept
@@ -143,21 +141,23 @@ namespace orion::math
 
         [[nodiscard]] friend constexpr Vector operator-(const Vector& vector) noexcept
         {
-            auto negated = vector;
-            std::ranges::for_each(negated, [](auto& value) { value = -value; });
-            return negated;
+            Vector result;
+            std::ranges::transform(vector, result.begin(), negate<>{});
+            return result;
         }
 
         [[nodiscard]] friend constexpr Vector operator+(const Vector& lhs, const Vector& rhs) noexcept
         {
-            auto result = lhs;
-            std::ranges::transform(lhs, rhs, result.begin(), [](auto lhs, auto rhs) { return lhs + rhs; });
+            Vector result;
+            std::ranges::transform(lhs, rhs, result.begin(), plus<>{});
             return result;
         }
 
         [[nodiscard]] friend constexpr Vector operator-(const Vector& lhs, const Vector& rhs) noexcept
         {
-            return lhs + -rhs;
+            Vector result;
+            std::ranges::transform(lhs, rhs, result.begin(), minus<>{});
+            return result;
         }
 
         storage components_; // NOLINT(misc-non-private-member-variables-in-classes)
@@ -167,7 +167,7 @@ namespace orion::math
     [[nodiscard]] constexpr auto dot(const Vector<T, N>& lhs, const Vector<T, N>& rhs) noexcept
     {
         using value_type = typename Vector<T, N>::value_type;
-        return std::inner_product(lhs.begin(), std::ranges::end(lhs), std::ranges::begin(rhs), value_type{});
+        return std::inner_product(lhs.begin(), lhs.end(), rhs.begin(), value_type{});
     }
 
     template<typename T>
@@ -181,6 +181,7 @@ namespace orion::math
 
     template<typename T, typename T1, std::size_t N1>
     [[nodiscard]] constexpr auto vector_cast(const Vector<T1, N1>& vector) noexcept
+        requires std::convertible_to<T1, T>
     {
         if constexpr (std::is_same_v<T1, T>) {
             return vector;
