@@ -7,6 +7,8 @@ target_sources(orion_math
         sqrt.h
         func.h
         concepts.h
+        constants.h
+        angles.h
         )
 
 add_subdirectory(vector)
