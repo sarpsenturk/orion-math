@@ -9,6 +9,7 @@ target_sources(orion_math
         concepts.h
         constants.h
         angles.h
+        trig.h
         )
 
 add_subdirectory(vector)
