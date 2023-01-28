@@ -6,4 +6,5 @@ target_sources(orion_math
         matrix.h
         matrix2.h
         matrix3.h
-        matrix4.h)
+        matrix4.h
+        transformation.h)
