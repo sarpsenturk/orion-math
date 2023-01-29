@@ -70,4 +70,30 @@ namespace orion::math
             0, 0, 1, 0,
             0, 0, 0, 1};
     }
+
+    template<typename T>
+    [[nodiscard]] constexpr Matrix4_t<T> lookat_rh(const Vector3_t<T>& position, const Vector3_t<T>& target, const Vector3_t<T>& up)
+    {
+        const auto zaxis = (position - target).normalize();
+        const auto xaxis = cross(zaxis, up).normalize();
+        const auto yaxis = cross(xaxis, zaxis);
+        return {
+            xaxis[0], xaxis[1], xaxis[2], -dot(xaxis, position),
+            yaxis[0], yaxis[1], yaxis[2], -dot(yaxis, position),
+            zaxis[0], zaxis[1], zaxis[2], -dot(zaxis, position),
+            0, 0, 0, 1};
+    }
+
+    template<typename T>
+    [[nodiscard]] constexpr Matrix4_t<T> lookat_lh(const Vector3_t<T>& position, const Vector3_t<T>& target, const Vector3_t<T>& up)
+    {
+        const auto zaxis = (target - position).normalize();
+        const auto xaxis = cross(zaxis, up).normalize();
+        const auto yaxis = cross(xaxis, zaxis);
+        return {
+            xaxis[0], xaxis[1], xaxis[2], -dot(xaxis, position),
+            yaxis[0], yaxis[1], yaxis[2], -dot(yaxis, position),
+            zaxis[0], zaxis[1], zaxis[2], -dot(zaxis, position),
+            0, 0, 0, 1};
+    }
 } // namespace orion::math
