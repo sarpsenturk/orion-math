@@ -96,4 +96,30 @@ namespace orion::math
             xaxis.z(), yaxis.z(), zaxis.z(), 0,
             -dot(xaxis, eye), -dot(yaxis, eye), -dot(zaxis, eye), 1};
     }
+
+    template<typename T>
+    [[nodiscard]] constexpr Matrix4_t<T> orthographic_rh(T left, T right, T bottom, T top, T near, T far)
+    {
+        const auto width = right - left;
+        const auto height = top - bottom;
+        const auto depth = near - far;
+        return {
+            T{2} / width, 0, 0, 0,
+            0, T{2} / height, 0, 0,
+            0, 0, T{1} / depth, 0,
+            (left + right) / width, (top + bottom) / height, near / depth, 1};
+    }
+
+    template<typename T>
+    [[nodiscard]] constexpr Matrix4_t<T> orthographic_lh(T left, T right, T bottom, T top, T near, T far)
+    {
+        const auto width = right - left;
+        const auto height = top - bottom;
+        const auto depth = far - near;
+        return {
+            T{2} / width, 0, 0, 0,
+            0, T{2} / height, 0, 0,
+            0, 0, 1 / depth, 0,
+            (left + right) / width, (top + bottom) / height, near / (near - far), 1};
+    }
 } // namespace orion::math

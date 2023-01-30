@@ -90,4 +90,24 @@ namespace
         EXPECT_NEAR(position_view_space.y(), 0, acceptable_error);
         EXPECT_NEAR(position_view_space.z(), 1, acceptable_error);
     }
+
+    TEST(Transformation, OrthographicRH)
+    {
+        const orion::math::Vector3 position{2.5f, -2.5f, -5.f};
+        const auto projection = orion::math::orthographic_rh(-5.f, 5.f, -5.f, 5.f, 0.f, 10.f);
+        const auto position_projected = orion::math::transform(position, projection);
+        EXPECT_NEAR(position_projected.x(), .5f, acceptable_error);
+        EXPECT_NEAR(position_projected.y(), -.5f, acceptable_error);
+        EXPECT_NEAR(position_projected.z(), .5f, acceptable_error);
+    }
+
+    TEST(Transformation, OrthographicLH)
+    {
+        const orion::math::Vector3 position{2.5f, -2.5f, -5.f};
+        const auto projection = orion::math::orthographic_lh(-5.f, 5.f, -5.f, 5.f, 0.f, 10.f);
+        const auto position_projected = orion::math::transform(position, projection);
+        EXPECT_NEAR(position_projected.x(), .5f, acceptable_error);
+        EXPECT_NEAR(position_projected.y(), -.5f, acceptable_error);
+        EXPECT_NEAR(position_projected.z(), -.5f, acceptable_error);
+    }
 } // namespace
