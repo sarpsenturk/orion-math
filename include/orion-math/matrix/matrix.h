@@ -1,7 +1,8 @@
 #pragma once
 
-#include "orion-math/concepts.h" // arithmetic
-#include "orion-math/func.h"     // negate, plus, minus
+#include "orion-math/concepts.h"      // arithmetic
+#include "orion-math/func.h"          // negate, plus, minus
+#include "orion-math/vector/vector.h" // vector
 
 #include <algorithm> // std::transform
 #include <array>     // std::array
@@ -13,7 +14,8 @@ namespace orion::math
     template<typename T, std::size_t Rows, std::size_t Cols>
     struct Matrix {
         using value_type = T;
-        using storage = std::array<value_type, Rows * Cols>;
+        using row_type = Vector<T, Cols>;
+        using storage = std::array<row_type, Rows>;
         using reference = value_type&;
         using const_reference = const value_type&;
         using pointer = value_type*;
@@ -34,7 +36,7 @@ namespace orion::math
         {
             Matrix identity{};
             for (std::size_t i = 0; i < rows; ++i) {
-                identity(i, i) = value_type{1};
+                identity[i][i] = value_type{1};
             }
             return identity;
         }
@@ -45,17 +47,8 @@ namespace orion::math
         [[nodiscard]] constexpr pointer data() noexcept { return elements_.data(); }
         [[nodiscard]] constexpr const_pointer data() const noexcept { return elements_.data(); }
 
-        [[nodiscard]] constexpr reference operator()(size_type index) noexcept { return elements_[index]; }
-        [[nodiscard]] constexpr const_reference operator()(size_type index) const noexcept { return elements_[index]; }
-
-        [[nodiscard]] constexpr reference operator()(size_type row, size_type column) noexcept
-        {
-            return elements_[calculate_index(row, column)];
-        }
-        [[nodiscard]] constexpr const_reference operator()(size_type row, size_type column) const noexcept
-        {
-            return elements_[calculate_index(row, column)];
-        }
+        [[nodiscard]] constexpr row_type& operator[](size_type idx) noexcept { return elements_[idx]; }
+        [[nodiscard]] constexpr const row_type& operator[](size_type idx) const noexcept { return elements_[idx]; }
 
         [[nodiscard]] constexpr friend bool operator==(const Matrix& lhs, const Matrix& rhs) = default;
 
@@ -98,9 +91,9 @@ namespace orion::math
                 for (std::size_t j = 0; j < rhs.columns; ++j) {
                     common_type sum{};
                     for (std::size_t k = 0; k < lhs.columns; ++k) {
-                        sum += lhs(i, k) * rhs(k, j);
+                        sum += lhs[i][k] * rhs[k][j];
                     }
-                    result(i, j) = sum;
+                    result[i][j] = sum;
                 }
             }
             return result;
@@ -111,7 +104,7 @@ namespace orion::math
             Matrix<value_type, Cols, Rows> result;
             for (std::size_t i = 0; i < rows; ++i) {
                 for (std::size_t j = 0; j < columns; ++j) {
-                    result(j, i) = (*this)(i, j);
+                    result[j][i] = (*this)[i][j];
                 }
             }
             return result;
@@ -134,11 +127,6 @@ namespace orion::math
         [[nodiscard]] constexpr const_reverse_iterator crend() const noexcept { return elements_.crend(); }
 
     private:
-        static constexpr size_type calculate_index(size_type row, size_type column) noexcept
-        {
-            return (row * columns) + column;
-        }
-
         static constexpr Matrix scalar_multiply(const Matrix& matrix, arithmetic auto scalar)
         {
             Matrix result;

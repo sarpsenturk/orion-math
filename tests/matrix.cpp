@@ -32,16 +32,19 @@ namespace
         static constexpr int expected = 42;
 
         Matrix matrix{};
-        matrix((1 * 3) + 2) = expected;
-        EXPECT_EQ(matrix(1, 2), expected);
+        matrix[1][2] = expected;
+        EXPECT_EQ(matrix[1][2], expected);
     }
 
     TEST(Matrix, Initializer)
     {
         using Matrix = orion::math::Matrix<int, 4, 4>;
         const Matrix matrix{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
-        for (int index = 0; auto value : matrix) {
-            EXPECT_EQ(value, index++);
+        int index = 0;
+        for (int row = 0; row < matrix.rows; ++row) {
+            for (int col = 0; col < matrix.columns; ++col) {
+                EXPECT_EQ(matrix[row][col], index++);
+            }
         }
     }
 
