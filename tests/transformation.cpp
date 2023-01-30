@@ -64,4 +64,30 @@ namespace
         EXPECT_NEAR(transformed[1], 0, acceptable_error);
         EXPECT_EQ(transformed[2], 0);
     }
+
+    TEST(Transformation, LookAtRH)
+    {
+        const orion::math::Vector3 position{0, 0, 0};
+        const orion::math::Vector3 eye{1, 0, 1};
+        const orion::math::Vector3 target{eye + orion::math::Vector3{0, 0, -1}};
+        const orion::math::Vector3 up{0, 1, 0};
+        const auto view = orion::math::lookat_rh(eye, target, up);
+        const auto position_view_space = orion::math::transform(position, view);
+        EXPECT_NEAR(position_view_space.x(), -1, acceptable_error);
+        EXPECT_NEAR(position_view_space.y(), 0, acceptable_error);
+        EXPECT_NEAR(position_view_space.z(), -1, acceptable_error);
+    }
+
+    TEST(Transformation, LookAtLH)
+    {
+        const orion::math::Vector3 position{0, 0, 0};
+        const orion::math::Vector3 eye{1, 0, -1};
+        const orion::math::Vector3 target{eye + orion::math::Vector3{0, 0, 1}};
+        const orion::math::Vector3 up{0, 1, 0};
+        const auto view = orion::math::lookat_lh(eye, target, up);
+        const auto position_view_space = orion::math::transform(position, view);
+        EXPECT_NEAR(position_view_space.x(), -1, acceptable_error);
+        EXPECT_NEAR(position_view_space.y(), 0, acceptable_error);
+        EXPECT_NEAR(position_view_space.z(), 1, acceptable_error);
+    }
 } // namespace
