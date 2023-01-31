@@ -122,4 +122,30 @@ namespace orion::math
             0, 0, 1 / depth, 0,
             (left + right) / width, (top + bottom) / height, near / (near - far), 1};
     }
+
+    template<typename T>
+    [[nodiscard]] constexpr Matrix4_t<T> perspective_fov_rh(Radians fov, T aspect_ratio, T near, T far)
+    {
+        const auto yscale = static_cast<T>(1 / tan(fov / 2));
+        const auto xscale = yscale / aspect_ratio;
+        const auto zdiff = near - far;
+        return {
+            xscale, 0, 0, 0,
+            0, yscale, 0, 0,
+            0, 0, far / zdiff, T{-1},
+            0, 0, (near * far) / zdiff, 0};
+    }
+
+    template<typename T>
+    [[nodiscard]] constexpr Matrix4_t<T> perspective_fov_lh(Radians fov, T aspect_ratio, T near, T far)
+    {
+        const auto yscale = static_cast<T>(1 / tan(fov / 2));
+        const auto xscale = yscale / aspect_ratio;
+        const auto zdiff = near - far;
+        return {
+            xscale, 0, 0, 0,
+            0, yscale, 0, 0,
+            0, 0, far / zdiff, T{1},
+            0, 0, (-near * far) / zdiff, 0};
+    }
 } // namespace orion::math
