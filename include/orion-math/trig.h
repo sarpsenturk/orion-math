@@ -116,4 +116,10 @@ namespace orion::math
     {
         return sin<Return>(radians) / cos<Return>(radians);
     }
+
+    template<std::floating_point Return = double>
+    [[nodiscard]] constexpr Return cot(Radians radians) noexcept
+    {
+        return cos<Return>(radians) / sin<Return>(radians);
+    }
 } // namespace orion::math

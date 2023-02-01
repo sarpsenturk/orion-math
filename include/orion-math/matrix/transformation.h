@@ -26,6 +26,12 @@ namespace orion::math
     }
 
     template<typename T>
+    [[nodiscard]] constexpr Matrix4_t<T> scaling(const Vector3_t<T>& vector)
+    {
+        return scaling(vector.x(), vector.y(), vector.z());
+    }
+
+    template<typename T>
     [[nodiscard]] constexpr Matrix4_t<T> translation(T x, T y, T z)
     {
         return {
@@ -33,6 +39,12 @@ namespace orion::math
             0, 1, 0, 0,
             0, 0, 1, 0,
             x, y, z, 1};
+    }
+
+    template<typename T>
+    [[nodiscard]] constexpr Matrix4_t<T> translation(const Vector3_t<T>& vector)
+    {
+        return translation(vector.x(), vector.y(), vector.z());
     }
 
     template<typename T = float>
@@ -79,7 +91,7 @@ namespace orion::math
         const auto yaxis = cross(zaxis, xaxis);
         return {
             xaxis.x(), yaxis.x(), zaxis.x(), 0,
-            xaxis.y(), yaxis.y(), zaxis.z(), 0,
+            xaxis.y(), yaxis.y(), zaxis.y(), 0,
             xaxis.z(), yaxis.z(), zaxis.z(), 0,
             -dot(xaxis, eye), -dot(yaxis, eye), -dot(zaxis, eye), 1};
     }
@@ -92,7 +104,7 @@ namespace orion::math
         const auto yaxis = cross(zaxis, xaxis);
         return {
             xaxis.x(), yaxis.x(), zaxis.x(), 0,
-            xaxis.y(), yaxis.y(), zaxis.z(), 0,
+            xaxis.y(), yaxis.y(), zaxis.y(), 0,
             xaxis.z(), yaxis.z(), zaxis.z(), 0,
             -dot(xaxis, eye), -dot(yaxis, eye), -dot(zaxis, eye), 1};
     }
@@ -126,7 +138,7 @@ namespace orion::math
     template<typename T>
     [[nodiscard]] constexpr Matrix4_t<T> perspective_fov_rh(Radians fov, T aspect_ratio, T near, T far)
     {
-        const auto yscale = static_cast<T>(1 / tan(fov / 2));
+        const auto yscale = static_cast<T>(1 / tan<T>(fov / 2));
         const auto xscale = yscale / aspect_ratio;
         const auto zdiff = near - far;
         return {
